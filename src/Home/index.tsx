@@ -1,192 +1,110 @@
-import { addDays, compareAsc, format } from "date-fns";
-import { Card } from "./components/Card/index";
-import { HomeContainer, Header, Main, InputText, Button, ReminderDate, RemindersEmpty } from "./styles";
+import { addDays } from "date-fns";
+import { Card } from "../components/Card/index";
+import {
+  HomeContainer,
+  Header,
+  Main,
+  InputText,
+  Button,
+  ReminderDate,
+  RemindersEmpty,
+} from "./styles";
 import { useState } from "react";
-import moment from "moment";
-
+import { useForm } from "react-hook-form";
+import { TCard, TFormData } from "../types/types";
+import { useReminders } from "../hooks/useReminders";
+import { useSort } from "../hooks/useSort";
+import { useDateValidation } from "../hooks/useDateValidation";
 
 export function Home() {
+  const { register, handleSubmit } = useForm<TFormData>();
+  const [cardId, setCardId] = useState(0);
 
-    const [reminders, setReminders] = useState([])
-    const [cardId, setCardId] = useState(0)
-    const [reminderId, setReminderId] = useState(0)
-    const [isTextEmpty, setIsTextEmpty] = useState(true)
-    const [isDateEmpty, setIsDateEmpty] = useState(true)
+  const { updateReminders, removeCard, reminders } = useReminders();
+  const { orderRemindersByDate } = useSort();
+  const { handleDate, handleText, isDateEmpty, isTextEmpty, validateDate } =
+    useDateValidation();
 
-    function handleText() {
-        const empty = !event?.target.value
-        setIsTextEmpty(empty)
+  function createCard(data: TFormData) {
+    const cardName = data.name;
+    const cardDate = data.date;
+    let date;
+
+    if (!validateDate(cardDate)) {
+      return;
+    } else {
+      date = new Date(cardDate);
+      date = addDays(date, 1);
     }
 
-    function handleDate() {
-        const empty = !event?.target.value
-        setIsDateEmpty(empty)
-    }
+    setCardId((state) => state + 1);
 
-    function validateDate(date: string) {
-        let dateToCompare = new Date(date)
-        dateToCompare = addDays(dateToCompare, 1)
-        const currentDate = new Date()
+    const newCard: TCard = {
+      name: cardName,
+      date: date,
+      id: cardId,
+    };
 
-        let valid = true
+    updateReminders(newCard);
+  }
 
-        if ((compareAsc(dateToCompare, currentDate) === -1)) {
-            alert('Digite uma data no futuro')
-            valid = false
-        }
+  return (
+    <HomeContainer>
+      <Header>
+        <h1>Meus lembretes</h1>
+      </Header>
 
-        return valid
-    }
+      <Main>
+        <form action="" onSubmit={handleSubmit(createCard)}>
+          <InputText
+            type="text"
+            {...register("name", {
+              onChange: (event) => {
+                handleText(event);
+              },
+            })}
+            placeholder="Nome do lembrete"
+          />
+          <InputText
+            type="date"
+            {...register("date", {
+              onChange: (event) => {
+                handleDate(event);
+              },
+            })}
+            placeholder="Data do lembrete"
+          />
 
-    function createCard() {
-        const cardName = document.getElementById('name').value
-        const cardDate = document.getElementById('date').value
-        let date
+          <Button disabled={isTextEmpty || isDateEmpty} type="submit">
+            Criar
+          </Button>
+        </form>
 
-        if (!validateDate(cardDate)) {
-            return
-        } else {
-            date = new Date(cardDate)
-            date = addDays(date, 1)
-        }
+        <span className="sub-title">Lista de lembretes</span>
 
-        setCardId(state => state + 1)
+        {reminders.length === 0 ? (
+          <RemindersEmpty>
+            <span>Não há lembretes salvos</span>
+          </RemindersEmpty>
+        ) : (
+          orderRemindersByDate() &&
+          reminders.map((reminder) => (
+            <div key={reminder.id}>
+              <ReminderDate>
+                <span>{reminder.reminderDate}</span>
+              </ReminderDate>
 
-        const newCard = {
-            name: cardName,
-            date: date,
-            id: cardId
-        }
-
-        updateReminders(newCard)
-    }
-
-    function updateReminders(newCard: object) {
-        const formattedDate = format(newCard.date, "dd/MM/yyyy")
-        const existingReminder = reminders.find(reminder => reminder.reminderDate === formattedDate)
-
-        if (existingReminder) {
-            existingReminder.cards.push(newCard)
-            existingReminder.cardsCounter += 1
-        } else {
-            createReminder(newCard, formattedDate)
-        }
-
-    }
-
-    function createReminder(newCard: object, formattedDate: string) {
-        setReminderId(state => state + 1)
-
-        const newReminder = {
-            reminderDate: formattedDate,
-            cards: [newCard],
-            cardsCounter: 1,
-            id: reminderId
-        }
-
-        setReminders(state => [...state, newReminder])
-
-    }
-
-    function removeCard(id: number) {
-
-        const updatedReminders = reminders.map(reminder => {
-
-            if (reminder.cards.some(card => card.id === id)) {
-
-                const filteredCards = reminder.cards.filter(card => card.id !== id)
-                reminder.cardsCounter -= 1
-
-                return { ...reminder, cards: filteredCards }
-            }
-
-            return reminder
-        })
-
-        const filteredReminders = updatedReminders.filter(reminder => reminder.cardsCounter !== 0)
-
-        setReminders(filteredReminders)
-    }
-
-    function orderRemindersByDate() {
-        for (let i = 0; i < reminders.length - 1; i++) {
-            for (let j = reminders.length - 1; j > i; j--) {
-                
-                if (compareData(reminders[j - 1].reminderDate,reminders[j].reminderDate)) {
-                    const temp = reminders[j]
-                    reminders[j] = reminders[j - 1]
-                    reminders[j - 1] = temp
-                }
-            }
-        }
-
-        return true
-    }
-    
-    function compareData(date1:string,date2:string){
-        const diff = moment(date2,"DD/MM/YYYY").diff(moment(date1,"DD/MM/YYYY"))
-
-        let isSmaller
-
-        if(diff<=1){
-            isSmaller = true
-        }else{
-            isSmaller = false
-        }
-
-        return isSmaller
-    }
-
-    return (
-        <HomeContainer>
-            <Header>
-                <h1>Meus lembretes</h1>
-            </Header>
-
-            <Main>
-
-                <InputText type="text" id='name' onChange={handleText} placeholder="Nome do lembrete" />
-                <InputText type="date" id='date' onChange={handleDate} placeholder="Data do lembrete" />
-
-                <Button onClick={createCard} disabled={isTextEmpty || isDateEmpty} type='submit'>
-                    Criar
-                </Button>
-
-                <span className="sub-title">Lista de lembretes</span>
-
-                {(reminders.length === 0) ? (
-
-                    <RemindersEmpty>
-                        <span>Não há lembretes salvos</span>
-                    </RemindersEmpty>
-
-                ) : (orderRemindersByDate()) && (
-
-                    reminders.map(reminder => (
-
-                        <div key={reminder.id}>
-
-                            <ReminderDate>
-                                <span>{reminder.reminderDate}</span>
-                            </ReminderDate>
-
-                            {reminder.cards.map(card => (
-
-                                <Card
-                                    key={card.id}
-                                    name={card.name}
-                                    onRemove={() => removeCard(card.id)}
-                                />
-
-                            ))}
-
-                        </div>
-                    ))
-
-                )}
-
-            </Main>
-
-        </HomeContainer>
-    )
+              {reminder.cards.map((card:TCard) => (
+                <Card
+                  key={card.id}
+                  name={card.name}
+                  onRemove={() => removeCard(card.id)}
+                />
+              ))}
+            </div>
+          ))
+        )}
+      </Main>
+    </HomeContainer>
+  );
 }
