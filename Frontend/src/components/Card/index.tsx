@@ -2,14 +2,14 @@ import { Trash } from "phosphor-react";
 import { CardContainer } from "./styles";
 
 type CardProps = {
-  name: string;
+  description: string;
   onRemove: () => void;
 }
 
-export function Card({ name, onRemove }: CardProps) {
+export function Card({ description, onRemove }: CardProps) {
   return (
     <CardContainer>
-      <span>{name}</span>
+      <span>{description}</span>
       <Trash onClick={onRemove} width={24} height={24} />
     </CardContainer>
   );

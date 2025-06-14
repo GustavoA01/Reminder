@@ -26,7 +26,7 @@ export function Home() {
     useDateValidation();
 
   function createCard(data: TFormData) {
-    const cardName = data.name;
+    const cardDescription = data.description;
     const cardDate = data.date;
     let date;
 
@@ -40,7 +40,7 @@ export function Home() {
     setCardId((state) => state + 1);
 
     const newCard: TCard = {
-      name: cardName,
+      description: cardDescription,
       date: date,
       id: cardId,
     };
@@ -55,10 +55,10 @@ export function Home() {
       </Header>
 
       <Main>
-        <form action="" onSubmit={handleSubmit(createCard)}>
+        <form onSubmit={handleSubmit(createCard)}>
           <InputText
             type="text"
-            {...register("name", {
+            {...register("description", {
               onChange: (event) => {
                 handleText(event);
               },
@@ -97,7 +97,7 @@ export function Home() {
               {reminder.cards.map((card:TCard) => (
                 <Card
                   key={card.id}
-                  name={card.name}
+                  description={card.description}
                   onRemove={() => removeCard(card.id)}
                 />
               ))}
