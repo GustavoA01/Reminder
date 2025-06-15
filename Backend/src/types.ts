@@ -1,17 +1,15 @@
-export type TFormData = {
-  description: string;
-  date: string;
-};
-
 export type TCard = {
+  id: number;
   description: string;
   date: Date;
-  id: number;
 };
 
-export type TReminder = {
-  id: number;
+export type TNewReminder = {
   cards: TCard[];
   cardsCounter: number;
   reminderDate: string;
+}
+
+export type TReminder = TNewReminder & {
+  id:string;
 };

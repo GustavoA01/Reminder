@@ -1,12 +1,19 @@
 import { fastify } from "fastify";
 import { DataBaseMemory } from "../db/database-memory";
+import cors from "@fastify/cors";
+import { TNewReminder, TReminder } from "../types";
 
 const server = fastify();
+
+server.register(cors, {
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+});
 
 const database = new DataBaseMemory();
 
 server.post("/reminders", (req, reply) => {
-  const { cards, cardsCounter, reminderDate } = req.body;
+  const { cards, cardsCounter, reminderDate } = <TNewReminder>req.body;
 
   database.create({
     cards,
@@ -24,19 +31,17 @@ server.get("/reminders", (req, reply) => {
   return reminders;
 });
 
-// server.put("/reminders/:id", (req, reply) => {
-//   const reminderId = req.params.id;
-//   const { name, description } = req.body;
+server.put<{ Params: { id: string } }>("/reminders/:id", (req, reply) => {
+  const reminderId = req.params.id;
+  const updatedReminder = <TNewReminder>req.body;
 
-//   database.update(reminderId, {
-//     name,
-//     description,
-//   });
-//   return reply.status(204).send();
-// });
+    database.update(reminderId, updatedReminder);
+    return reply.status(204).send();
+  
+});
 
-server.delete("/reminders/:id", (req, reply) => {
-  const id = req.params.id;
+server.delete<{ Params: { id: string } }>("/reminders/:id", (req, reply) => {
+  const id = req.params.id
 
   database.delete(id);
   return reply.status(204).send();

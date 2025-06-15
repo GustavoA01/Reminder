@@ -9,16 +9,14 @@ import {
   ReminderDate,
   RemindersEmpty,
 } from "./styles";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { TCard, TFormData } from "../types/types";
+import { TCard, TFormData } from "../types";
 import { useReminders } from "../hooks/useReminders";
 import { useSort } from "../hooks/useSort";
 import { useDateValidation } from "../hooks/useDateValidation";
 
 export function Home() {
   const { register, handleSubmit } = useForm<TFormData>();
-  const [cardId, setCardId] = useState(0);
 
   const { updateReminders, removeCard, reminders } = useReminders();
   const { orderRemindersByDate } = useSort();
@@ -37,17 +35,15 @@ export function Home() {
       date = addDays(date, 1);
     }
 
-    setCardId((state) => state + 1);
-
     const newCard: TCard = {
+      id: crypto.randomUUID(),
       description: cardDescription,
       date: date,
-      id: cardId,
     };
 
     updateReminders(newCard);
   }
-
+  
   return (
     <HomeContainer>
       <Header>

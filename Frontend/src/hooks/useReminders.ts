@@ -1,66 +1,71 @@
-import { useState } from "react";
-import { TCard, TReminder } from "../types/types";
+import { TCard, TNewReminder } from "../types";
 import { format } from "date-fns";
+import { useAPI } from "./api";
 
 export const useReminders = () => {
-  const [reminders, setReminders] = useState<TReminder[]>([])
-  const [reminderId, setReminderId] = useState(0)
+  const { post, reminders, put, del } = useAPI();
 
   function updateReminders(newCard: TCard) {
-    const formattedDate = format(newCard.date, "dd/MM/yyyy")
+    const formattedDate = format(newCard.date, "dd/MM/yyyy");
+
     const existingReminder = reminders.find(
       (reminder) => reminder.reminderDate === formattedDate
-    )
+    );
 
     if (existingReminder) {
-      existingReminder.cards.push(newCard)
-      existingReminder.cardsCounter += 1
+      existingReminder.cards.push(newCard);
+      const length = existingReminder.cards.length;
+      existingReminder.cardsCounter = length === 0 ? 1 : length;
+      put(existingReminder);
     } else {
-      createReminder(newCard, formattedDate)
+      createReminder(newCard, formattedDate);
     }
   }
 
-  // const fetchData = async () =>{
-  //   const response = await fetch("http://localhost:3333/reminders")
-  //   console.log(response.body)
-  // }
-
   function createReminder(newCard: TCard, formattedDate: string) {
-    setReminderId((state) => state + 1)
-
-    // fetchData()
-
-    const newReminder: TReminder = {
-      id: reminderId,
+    const newReminder: TNewReminder = {
       cards: [newCard],
       cardsCounter: 1,
       reminderDate: formattedDate,
     };
 
-    setReminders((state) => [...state, newReminder])
+    post(newReminder);
   }
 
-  function removeCard(id: number) {
+  function removeCard(id: string) {
+    let reminderToPUT;
+
     const updatedReminders = reminders.map((reminder) => {
       if (reminder.cards.some((card) => card.id === id)) {
-        const filteredCards = reminder.cards.filter((card) => card.id !== id)
-        reminder.cardsCounter -= 1
+        const filteredCards = reminder.cards.filter((card) => card.id !== id);
+        
+        const updatedReminder = {
+          ...reminder,
+          cards: filteredCards,
+          cardsCounter: reminder.cardsCounter - 1,
+        };
 
-        return { ...reminder, cards: filteredCards }
+        reminderToPUT = updatedReminder;
+        return updatedReminder;
       }
-      return reminder
+
+      return reminder;
     });
 
-    const filteredReminders = updatedReminders.filter(
-      (reminder) => reminder.cardsCounter !== 0
-    )
+    const reminderToDelete = updatedReminders.find(
+      (reminder) => reminder.cardsCounter === 0
+    );
 
-    setReminders(filteredReminders)
+    if (reminderToDelete) {
+      del(reminderToDelete);
+    } else if (reminderToPUT) {
+      put(reminderToPUT);
+    }
+
   }
 
   return {
     reminders,
-    reminderId,
     updateReminders,
     removeCard,
   };
