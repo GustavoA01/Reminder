@@ -5,3 +5,5 @@ dist/
 .vscode/
 .idea/
 *.iml
+
+/src/generated/prisma
