@@ -1,7 +1,8 @@
 import { fastify } from "fastify";
 import { DataBaseMemory } from "../db/database-memory";
 import cors from "@fastify/cors";
-import { TNewReminder, TReminder } from "../types";
+import { TNewReminder } from "../types";
+import { useSort } from "../hooks/useSort";
 
 const server = fastify();
 
@@ -9,6 +10,8 @@ server.register(cors, {
   origin: "http://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE"],
 });
+
+const {orderRemindersByDate} = useSort()
 
 const database = new DataBaseMemory();
 
@@ -21,13 +24,12 @@ server.post("/reminders", (req, reply) => {
     reminderDate,
   });
 
-  console.log(database.list());
-
   return reply.status(201).send();
 });
 
-server.get("/reminders", (req, reply) => {
+server.get("/reminders", () => {
   const reminders = database.list();
+  orderRemindersByDate(reminders)
   return reminders;
 });
 

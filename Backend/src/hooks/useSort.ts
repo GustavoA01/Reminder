@@ -1,15 +1,12 @@
 import moment from "moment";
-import { useReminders } from "./useReminders";
-
+import { TReminder } from "../types";
 
 export const useSort = () => {
-  const { reminders } = useReminders();
-  
   function compareDate(date1: string, date2: string) {
     const diff = moment(date2, "DD/MM/YYYY").diff(moment(date1, "DD/MM/YYYY"));
-  
+
     let isSmaller;
-  
+
     if (diff <= 1) {
       isSmaller = true;
     } else {
@@ -17,8 +14,8 @@ export const useSort = () => {
     }
     return isSmaller;
   }
-  
-  function orderRemindersByDate() {
+
+  function orderRemindersByDate(reminders: TReminder[]) {
     for (let i = 0; i < reminders.length - 1; i++) {
       for (let j = reminders.length - 1; j > i; j--) {
         if (
@@ -30,8 +27,8 @@ export const useSort = () => {
         }
       }
     }
-    return true;
   }
+
   return {
     orderRemindersByDate,
   };

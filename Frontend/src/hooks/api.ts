@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { TNewReminder, TReminder } from "../types";
 import { deleteReminder, getReminders, postReminders, putReminder } from "../lib/useAPI";
-import { useSort } from "./useSort";
 
 export const useAPI = () => {
   const [reminders, setReminders] = useState<TReminder[]>([]);
-  // const {} = useSort()
 
   useEffect(() => {
     get();
@@ -14,7 +12,6 @@ export const useAPI = () => {
   async function get() {
     const response = await getReminders();
     setReminders(response);
-    // orderRemindersByDate()
   }
 
   async function post(reminder: TNewReminder) {

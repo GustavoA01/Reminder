@@ -12,14 +12,12 @@ import {
 import { useForm } from "react-hook-form";
 import { TCard, TFormData } from "../types";
 import { useReminders } from "../hooks/useReminders";
-import { useSort } from "../hooks/useSort";
 import { useDateValidation } from "../hooks/useDateValidation";
 
 export function Home() {
   const { register, handleSubmit } = useForm<TFormData>();
 
   const { updateReminders, removeCard, reminders } = useReminders();
-  const { orderRemindersByDate } = useSort();
   const { handleDate, handleText, isDateEmpty, isTextEmpty, validateDate } =
     useDateValidation();
 
@@ -83,14 +81,13 @@ export function Home() {
             <span>Não há lembretes salvos</span>
           </RemindersEmpty>
         ) : (
-          orderRemindersByDate() &&
           reminders.map((reminder) => (
             <div key={reminder.id}>
               <ReminderDate>
                 <span>{reminder.reminderDate}</span>
               </ReminderDate>
 
-              {reminder.cards.map((card:TCard) => (
+              {reminder.cards.map((card: TCard) => (
                 <Card
                   key={card.id}
                   description={card.description}
