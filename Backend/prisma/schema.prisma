@@ -12,16 +12,16 @@ datasource db {
 }
 
 model Reminder {
-  id String @id @default(uuid())
-  cards Card[]
-  cardsCounter Int
-  reminderDate String
+  id           String      @id @default(uuid())
+  cards        Card[]
+  cardsCounter  Int
+  reminderDate DateTime
 }
 
 model Card {
-  id String @id 
+  id          String      @id
   description String
-  date DateTime
-  reminder   Reminder @relation(fields: [reminderId], references: [id])
-  reminderId String
+  date        DateTime
+  reminderId  String
+  reminder    Reminder @relation(fields: [reminderId], references: [id])
 }

@@ -226,8 +226,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.10.0
-   * Query Engine version: aee10d5a411e4360c6d3445ce4810ca65adbf3e8
+   * Prisma Client JS version: 6.10.1
+   * Query Engine version: 9b628578b3b7cae625e8c927178f15a170e74a9c
    */
   export type PrismaVersion = {
     client: string
@@ -1013,13 +1013,13 @@ export namespace Prisma {
   export type ReminderMinAggregateOutputType = {
     id: string | null
     cardsCounter: number | null
-    reminderDate: string | null
+    reminderDate: Date | null
   }
 
   export type ReminderMaxAggregateOutputType = {
     id: string | null
     cardsCounter: number | null
-    reminderDate: string | null
+    reminderDate: Date | null
   }
 
   export type ReminderCountAggregateOutputType = {
@@ -1146,7 +1146,7 @@ export namespace Prisma {
   export type ReminderGroupByOutputType = {
     id: string
     cardsCounter: number
-    reminderDate: string
+    reminderDate: Date
     _count: ReminderCountAggregateOutputType | null
     _avg: ReminderAvgAggregateOutputType | null
     _sum: ReminderSumAggregateOutputType | null
@@ -1210,7 +1210,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       cardsCounter: number
-      reminderDate: string
+      reminderDate: Date
     }, ExtArgs["result"]["reminder"]>
     composites: {}
   }
@@ -1637,7 +1637,7 @@ export namespace Prisma {
   interface ReminderFieldRefs {
     readonly id: FieldRef<"Reminder", 'String'>
     readonly cardsCounter: FieldRef<"Reminder", 'Int'>
-    readonly reminderDate: FieldRef<"Reminder", 'String'>
+    readonly reminderDate: FieldRef<"Reminder", 'DateTime'>
   }
     
 
@@ -3189,7 +3189,7 @@ export namespace Prisma {
     NOT?: ReminderWhereInput | ReminderWhereInput[]
     id?: StringFilter<"Reminder"> | string
     cardsCounter?: IntFilter<"Reminder"> | number
-    reminderDate?: StringFilter<"Reminder"> | string
+    reminderDate?: DateTimeFilter<"Reminder"> | Date | string
     cards?: CardListRelationFilter
   }
 
@@ -3206,7 +3206,7 @@ export namespace Prisma {
     OR?: ReminderWhereInput[]
     NOT?: ReminderWhereInput | ReminderWhereInput[]
     cardsCounter?: IntFilter<"Reminder"> | number
-    reminderDate?: StringFilter<"Reminder"> | string
+    reminderDate?: DateTimeFilter<"Reminder"> | Date | string
     cards?: CardListRelationFilter
   }, "id">
 
@@ -3227,7 +3227,7 @@ export namespace Prisma {
     NOT?: ReminderScalarWhereWithAggregatesInput | ReminderScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Reminder"> | string
     cardsCounter?: IntWithAggregatesFilter<"Reminder"> | number
-    reminderDate?: StringWithAggregatesFilter<"Reminder"> | string
+    reminderDate?: DateTimeWithAggregatesFilter<"Reminder"> | Date | string
   }
 
   export type CardWhereInput = {
@@ -3283,47 +3283,47 @@ export namespace Prisma {
   export type ReminderCreateInput = {
     id?: string
     cardsCounter: number
-    reminderDate: string
+    reminderDate: Date | string
     cards?: CardCreateNestedManyWithoutReminderInput
   }
 
   export type ReminderUncheckedCreateInput = {
     id?: string
     cardsCounter: number
-    reminderDate: string
+    reminderDate: Date | string
     cards?: CardUncheckedCreateNestedManyWithoutReminderInput
   }
 
   export type ReminderUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     cardsCounter?: IntFieldUpdateOperationsInput | number
-    reminderDate?: StringFieldUpdateOperationsInput | string
+    reminderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     cards?: CardUpdateManyWithoutReminderNestedInput
   }
 
   export type ReminderUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     cardsCounter?: IntFieldUpdateOperationsInput | number
-    reminderDate?: StringFieldUpdateOperationsInput | string
+    reminderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     cards?: CardUncheckedUpdateManyWithoutReminderNestedInput
   }
 
   export type ReminderCreateManyInput = {
     id?: string
     cardsCounter: number
-    reminderDate: string
+    reminderDate: Date | string
   }
 
   export type ReminderUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     cardsCounter?: IntFieldUpdateOperationsInput | number
-    reminderDate?: StringFieldUpdateOperationsInput | string
+    reminderDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReminderUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     cardsCounter?: IntFieldUpdateOperationsInput | number
-    reminderDate?: StringFieldUpdateOperationsInput | string
+    reminderDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CardCreateInput = {
@@ -3399,6 +3399,17 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[]
+    notIn?: Date[] | string[]
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
   export type CardListRelationFilter = {
     every?: CardWhereInput
     some?: CardWhereInput
@@ -3468,7 +3479,7 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
     notIn?: Date[] | string[]
@@ -3476,7 +3487,10 @@ export namespace Prisma {
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type ReminderScalarRelationFilter = {
@@ -3505,20 +3519,6 @@ export namespace Prisma {
     reminderId?: SortOrder
   }
 
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type CardCreateNestedManyWithoutReminderInput = {
     create?: XOR<CardCreateWithoutReminderInput, CardUncheckedCreateWithoutReminderInput> | CardCreateWithoutReminderInput[] | CardUncheckedCreateWithoutReminderInput[]
     connectOrCreate?: CardCreateOrConnectWithoutReminderInput | CardCreateOrConnectWithoutReminderInput[]
@@ -3543,6 +3543,10 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type CardUpdateManyWithoutReminderNestedInput = {
@@ -3579,10 +3583,6 @@ export namespace Prisma {
     connect?: ReminderWhereUniqueInput
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
-  }
-
   export type ReminderUpdateOneRequiredWithoutCardsNestedInput = {
     create?: XOR<ReminderCreateWithoutCardsInput, ReminderUncheckedCreateWithoutCardsInput>
     connectOrCreate?: ReminderCreateOrConnectWithoutCardsInput
@@ -3614,6 +3614,17 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[]
+    notIn?: Date[] | string[]
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -3658,17 +3669,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -3735,13 +3735,13 @@ export namespace Prisma {
   export type ReminderCreateWithoutCardsInput = {
     id?: string
     cardsCounter: number
-    reminderDate: string
+    reminderDate: Date | string
   }
 
   export type ReminderUncheckedCreateWithoutCardsInput = {
     id?: string
     cardsCounter: number
-    reminderDate: string
+    reminderDate: Date | string
   }
 
   export type ReminderCreateOrConnectWithoutCardsInput = {
@@ -3763,13 +3763,13 @@ export namespace Prisma {
   export type ReminderUpdateWithoutCardsInput = {
     id?: StringFieldUpdateOperationsInput | string
     cardsCounter?: IntFieldUpdateOperationsInput | number
-    reminderDate?: StringFieldUpdateOperationsInput | string
+    reminderDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReminderUncheckedUpdateWithoutCardsInput = {
     id?: StringFieldUpdateOperationsInput | string
     cardsCounter?: IntFieldUpdateOperationsInput | number
-    reminderDate?: StringFieldUpdateOperationsInput | string
+    reminderDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CardCreateManyReminderInput = {

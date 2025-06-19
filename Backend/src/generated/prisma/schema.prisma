@@ -22,6 +22,6 @@ model Card {
   id          String   @id
   description String
   date        DateTime
-  reminder    Reminder @relation(fields: [reminderId], references: [id])
   reminderId  String
+  reminder    Reminder @relation(fields: [reminderId], references: [id])
 }

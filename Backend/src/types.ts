@@ -1,5 +1,5 @@
 export type TCard = {
-  id: number;
+  id: string;
   description: string;
   date: Date;
 };
@@ -7,7 +7,7 @@ export type TCard = {
 export type TNewReminder = {
   cards: TCard[];
   cardsCounter: number;
-  reminderDate: string;
+  reminderDate: Date;
 }
 
 export type TReminder = TNewReminder & {

@@ -19,7 +19,7 @@ export const useSort = () => {
     for (let i = 0; i < reminders.length - 1; i++) {
       for (let j = reminders.length - 1; j > i; j--) {
         if (
-          compareDate(reminders[j - 1].reminderDate, reminders[j].reminderDate)
+          compareDate(String(reminders[j - 1].reminderDate), String(reminders[j].reminderDate))
         ) {
           const temp = reminders[j];
           reminders[j] = reminders[j - 1];
