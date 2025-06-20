@@ -1,9 +1,9 @@
 import { TCard, TNewReminder } from "../types";
 import { format } from "date-fns";
-import { useAPI } from "./api";
+import { useRemindersAPI } from "./useRemindersAPI";
 
 export const useReminders = () => {
-  const { post, reminders, put, del } = useAPI();
+  const { post, reminders, put, del } = useRemindersAPI();
 
   function updateReminders(newCard: TCard) {
     const formattedDate = format(newCard.date, "dd/MM/yyyy");
@@ -14,9 +14,10 @@ export const useReminders = () => {
 
     if (existingReminder) {
       existingReminder.cards.push(newCard);
+
       const length = existingReminder.cards.length;
       existingReminder.cardsCounter = length === 0 ? 1 : length;
-      console.log(existingReminder.cardsCounter)
+
       put(existingReminder);
     } else {
       createReminder(newCard);
@@ -34,7 +35,7 @@ export const useReminders = () => {
   }
 
   function removeCard(id: string) {
-    let reminderToPUT;
+    let reminderToPut;
 
     const updatedReminders = reminders.map((reminder) => {
       if (reminder.cards.some((card) => card.id === id)) {
@@ -46,7 +47,7 @@ export const useReminders = () => {
           cardsCounter: reminder.cardsCounter - 1,
         };
 
-        reminderToPUT = updatedReminder;
+        reminderToPut = updatedReminder;
         return updatedReminder;
       }
 
@@ -59,8 +60,8 @@ export const useReminders = () => {
 
     if (reminderToDelete) {
       del(reminderToDelete);
-    } else if (reminderToPUT) {
-      put(reminderToPUT);
+    } else if (reminderToPut) {
+      put(reminderToPut);
     }
 
   }

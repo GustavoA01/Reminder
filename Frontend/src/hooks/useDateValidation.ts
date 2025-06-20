@@ -1,19 +1,6 @@
 import { addDays, compareAsc } from "date-fns";
-import { useState } from "react";
 
 export const useDateValidation = () => {
-  const [isTextEmpty, setIsTextEmpty] = useState(true);
-  const [isDateEmpty, setIsDateEmpty] = useState(true);
-
-  function handleText(event: React.ChangeEvent<HTMLInputElement>) {
-    const empty = !event?.target.value;
-    setIsTextEmpty(empty);
-  }
-
-  function handleDate(event: React.ChangeEvent<HTMLInputElement>) {
-    const empty = !event?.target.value;
-    setIsDateEmpty(empty);
-  }
   
   function validateDate(date: string) {
     let dateToCompare = new Date(date);
@@ -31,10 +18,6 @@ export const useDateValidation = () => {
   }
 
   return {
-    validateDate,
-    handleDate,
-    handleText,
-    isDateEmpty,
-    isTextEmpty
+    validateDate
   };
 };

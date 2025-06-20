@@ -33,5 +33,15 @@ export const CardContainer = styled.div`
         margin-left: auto;
         cursor: pointer;
     }
-    
+`
+export const SkeletonContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 3rem;
+    span{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius:8px
+    }
 `
