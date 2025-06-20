@@ -23,5 +23,5 @@ model Card {
   description String
   date        DateTime
   reminderId  String
-  reminder    Reminder @relation(fields: [reminderId], references: [id])
+  reminder    Reminder @relation(fields: [reminderId], references: [id],onDelete: Cascade)
 }

@@ -1,4 +1,4 @@
-import { addDays } from "date-fns";
+import { addDays, format } from "date-fns";
 import { Card } from "../components/Card/index";
 import {
   HomeContainer,
@@ -41,7 +41,9 @@ export function Home() {
 
     updateReminders(newCard);
   }
-  
+
+  //TODO: fazer skeleton
+
   return (
     <HomeContainer>
       <Header>
@@ -81,21 +83,24 @@ export function Home() {
             <span>Não há lembretes salvos</span>
           </RemindersEmpty>
         ) : (
-          reminders.map((reminder) => (
-            <div key={reminder.id}>
-              <ReminderDate>
-                <span>{reminder.reminderDate}</span>
-              </ReminderDate>
+          reminders.map((reminder) => {
+            const dateFormatted = format(reminder.reminderDate,"dd/MM/yyyy")
+            return (
+              <div key={reminder.id}>
+                <ReminderDate>
+                  <span>{dateFormatted}</span>
+                </ReminderDate>
 
-              {reminder.cards.map((card: TCard) => (
-                <Card
-                  key={card.id}
-                  description={card.description}
-                  onRemove={() => removeCard(card.id)}
-                />
-              ))}
-            </div>
-          ))
+                {reminder.cards.map((card: TCard) => (
+                  <Card
+                    key={card.id}
+                    description={card.description}
+                    onRemove={() => removeCard(card.id)}
+                  />
+                ))}
+              </div>
+            );
+          })
         )}
       </Main>
     </HomeContainer>

@@ -9,24 +9,25 @@ export const useReminders = () => {
     const formattedDate = format(newCard.date, "dd/MM/yyyy");
 
     const existingReminder = reminders.find(
-      (reminder) => reminder.reminderDate === formattedDate
+      (reminder) => format(reminder.reminderDate,"dd/MM/yyyy") === formattedDate
     );
 
     if (existingReminder) {
       existingReminder.cards.push(newCard);
       const length = existingReminder.cards.length;
       existingReminder.cardsCounter = length === 0 ? 1 : length;
+      console.log(existingReminder.cardsCounter)
       put(existingReminder);
     } else {
-      createReminder(newCard, formattedDate);
+      createReminder(newCard);
     }
   }
 
-  function createReminder(newCard: TCard, formattedDate: string) {
+  function createReminder(newCard: TCard) {
     const newReminder: TNewReminder = {
       cards: [newCard],
       cardsCounter: 1,
-      reminderDate: formattedDate,
+      reminderDate: newCard.date,
     };
 
     post(newReminder);
