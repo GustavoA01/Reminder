@@ -21,14 +21,15 @@ export function Home() {
 
   const { updateReminders, removeCard, reminders } = useReminders();
   const { validateDate } = useDateValidation();
-      const {isLoading} = useRemindersAPI()
-  
+  const { isLoading } = useRemindersAPI();
+
   function createCard(data: TFormData) {
     const cardDescription = data.description;
     const cardDate = data.date;
     let date;
 
     if (!validateDate(cardDate)) {
+      alert("Digite uma data atual ou no futuro");
       return;
     } else {
       date = new Date(cardDate);
@@ -43,8 +44,6 @@ export function Home() {
 
     updateReminders(newCard);
   }
-
-  //TODO: fazer skeleton
 
   return (
     <HomeContainer>
@@ -73,7 +72,10 @@ export function Home() {
         <span className="sub-title">Lista de lembretes</span>
 
         <CardSkeleton />
-        {reminders.length === 0 && !isLoading? (
+        <CardSkeleton />
+        <CardSkeleton />
+
+        {reminders.length === 0 && !isLoading ? (
           <>
             <RemindersEmpty>
               <span>Não há lembretes salvos</span>

@@ -10,7 +10,6 @@ export const useDateValidation = () => {
     let valid = true;
 
     if (compareAsc(dateToCompare, currentDate) === -1) {
-      alert("Digite uma data no futuro");
       valid = false;
     }
 
