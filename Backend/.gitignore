@@ -7,3 +7,5 @@ dist/
 *.iml
 
 /src/generated/prisma
+
+prisma/dev.db
