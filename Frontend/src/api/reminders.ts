@@ -1,14 +1,14 @@
-import axios from "axios";
 import { TNewReminder, TReminder } from "../types";
+import { api } from "../lib/axios";
 
-const url = "http://localhost:3333/reminders";
+const remindersEndPoint = "/reminders";
 
 export const getReminders = async (
   setIsLoading: (isLoading: boolean) => void
 ) => {
   setIsLoading(true);
   try {
-    const res = await axios.get<TReminder[]>(url);
+    const res = await api.get<TReminder[]>(remindersEndPoint);
     return res.data;
   } finally {
     setIsLoading(false);
@@ -17,7 +17,7 @@ export const getReminders = async (
 
 export const postReminders = (reminder: TNewReminder) => {
   const { cards, cardsCounter, reminderDate } = reminder;
-  return axios.post(url, {
+  return api.post(remindersEndPoint, {
     cards,
     cardsCounter,
     reminderDate,
@@ -25,9 +25,9 @@ export const postReminders = (reminder: TNewReminder) => {
 };
 
 export const putReminder = (id: string, reminder: TReminder) => {
-  return axios.put(`${url}/${id}`, reminder);
+  return api.put(`${remindersEndPoint}/${id}`, reminder);
 };
 
 export const deleteReminder = (id: string) => {
-  return axios.delete(`${url}/${id}`);
+  return api.delete(`${remindersEndPoint}/${id}`);
 };

@@ -7,6 +7,7 @@ export const CardSkeleton = () => {
   const { isLoading } = useRemindersAPI();
 
   if (!isLoading) return null;
+  
   return (
     <SkeletonContainer>
       <SkeletonTheme baseColor="#202020" highlightColor="#444">

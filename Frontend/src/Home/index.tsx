@@ -71,9 +71,9 @@ export function Home() {
 
         <span className="sub-title">Lista de lembretes</span>
 
-        <CardSkeleton />
-        <CardSkeleton />
-        <CardSkeleton />
+        {[...Array(5).map((_,index)=> (
+          <CardSkeleton key={index} />
+        ))]}
 
         {reminders.length === 0 && !isLoading ? (
           <>
