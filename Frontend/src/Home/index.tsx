@@ -1,49 +1,21 @@
-import { addDays, format } from "date-fns";
-import { Card } from "../components/Card/index";
+import { format } from "date-fns"
+import { Card } from "../components/Card/index"
 import {
   HomeContainer,
   Header,
   Main,
-  InputText,
-  Button,
   ReminderDate,
   RemindersEmpty,
-} from "./styles";
-import { useForm } from "react-hook-form";
-import { TCard, TFormData } from "../types";
-import { useReminders } from "../hooks/useReminders";
-import { useDateValidation } from "../hooks/useDateValidation";
-import { CardSkeleton } from "../components/Card/skeleton";
-import { useRemindersAPI } from "../hooks/useRemindersAPI";
+} from "./styles"
+import { TCard } from "../types"
+import { useReminders } from "../hooks/useReminders"
+import { CardSkeleton } from "../components/Card/skeleton"
+import { useRemindersAPI } from "../hooks/useRemindersAPI"
+import { CardForm } from "../components/CardForm"
 
 export function Home() {
-  const { register, handleSubmit } = useForm<TFormData>();
-
-  const { updateReminders, removeCard, reminders } = useReminders();
-  const { validateDate } = useDateValidation();
-  const { isLoading } = useRemindersAPI();
-
-  function createCard(data: TFormData) {
-    const cardDescription = data.description;
-    const cardDate = data.date;
-    let date;
-
-    if (!validateDate(cardDate)) {
-      alert("Digite uma data atual ou no futuro");
-      return;
-    } else {
-      date = new Date(cardDate);
-      date = addDays(date, 1);
-    }
-
-    const newCard: TCard = {
-      id: crypto.randomUUID(),
-      description: cardDescription,
-      date: date,
-    };
-
-    updateReminders(newCard);
-  }
+  const { removeCard, reminders } = useReminders()
+  const { isLoading } = useRemindersAPI()
 
   return (
     <HomeContainer>
@@ -52,28 +24,11 @@ export function Home() {
       </Header>
 
       <Main>
-        <form onSubmit={handleSubmit(createCard)}>
-          <InputText
-            type="text"
-            {...register("description")}
-            required
-            placeholder="Nome do lembrete"
-          />
-          <InputText
-            type="date"
-            {...register("date")}
-            required
-            placeholder="Data do lembrete"
-          />
-
-          <Button type="submit">Criar</Button>
-        </form>
+        <CardForm />
 
         <span className="sub-title">Lista de lembretes</span>
 
-        {[...Array(5).map((_,index)=> (
-          <CardSkeleton key={index} />
-        ))]}
+        {[...Array(5).map((_, index) => <CardSkeleton key={index} />)]}
 
         {reminders.length === 0 && !isLoading ? (
           <>
@@ -83,7 +38,8 @@ export function Home() {
           </>
         ) : (
           reminders.map((reminder) => {
-            const dateFormatted = format(reminder.reminderDate, "dd/MM/yyyy");
+            const dateFormatted = format(reminder.reminderDate, "dd/MM/yyyy")
+
             return (
               <div key={reminder.id}>
                 <ReminderDate>
@@ -98,10 +54,10 @@ export function Home() {
                   />
                 ))}
               </div>
-            );
+            )
           })
         )}
       </Main>
     </HomeContainer>
-  );
+  )
 }
