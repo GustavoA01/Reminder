@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
-import { Button, InputText } from "../../Home/styles"
 import { TFormData } from "../../types"
 import { useCard } from "../../hooks/useCard"
+import { Button, InputText } from "./styles"
 
 export const CardForm = () => {
   const { register, handleSubmit } = useForm<TFormData>()
